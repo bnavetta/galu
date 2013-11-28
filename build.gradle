@@ -1,0 +1,31 @@
+apply plugin: 'java'
+apply plugin: 'groovy'
+apply plugin: 'eclipse'
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+version = '1.0'
+
+ext {
+	versions = [
+		guava: '15.0',
+		spock: '0.7-groovy-2.0',
+		groovy: '2.2.1'
+	]
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile "com.google.guava:guava:$versions.guava"
+    
+    testCompile "org.spockframework:spock-core:$versions.spock"
+    testCompile "org.codehaus.groovy:groovy-all:$versions.groovy"
+}
+
+task wrapper(type: Wrapper) {
+	gradleVersion = 1.9
+}
