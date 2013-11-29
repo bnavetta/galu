@@ -77,8 +77,9 @@ class Vector2Spec extends Specification
 			7.6	|	2.2	||	62.6
 	}
 	
-	def "add vectors"()
+	def "angle between"()
 	{
-		
+		expect:
+			that new Vector2(0, 1).angleBetween(new Vector2(1, 0)), closeTo(Math.PI/2, 0.01f)
 	}
 }
