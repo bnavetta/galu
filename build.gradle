@@ -11,7 +11,7 @@ ext {
 	versions = [
 		guava: '15.0',
 		spock: '0.7-groovy-2.0',
-		groovy: '2.2.1'
+		groovy: '2.1.9' // wait for groovy-eclipse to support 2.2
 	]
 }
 
