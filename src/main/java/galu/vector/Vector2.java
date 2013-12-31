@@ -139,7 +139,9 @@ public final class Vector2 implements Vector<Vector2>
 	@Override
 	public int hashCode()
 	{
-		return Hashing.adler32().newHasher()
-				.putFloat(x).putFloat(y).hash().asInt();
+		int result = 31;
+		result = 37 * result + Float.floatToIntBits(x);
+		result = 37 * result + Float.floatToIntBits(y);
+		return result;
 	}
 }

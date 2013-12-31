@@ -141,7 +141,10 @@ public class Vector3 implements Vector<Vector3>
 	@Override
 	public int hashCode()
 	{
-		return Hashing.adler32().newHasher()
-				.putFloat(x).putFloat(y).putFloat(z).hash().asInt();
+		int result = 23;
+		result = 37 * result + Float.floatToIntBits(x);
+		result = 37 * result + Float.floatToIntBits(y);
+		result = 37 * result + Float.floatToIntBits(z);
+		return result;
 	}
 }

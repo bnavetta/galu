@@ -147,7 +147,11 @@ public final class Vector4 implements Vector<Vector4>
 	@Override
 	public int hashCode()
 	{
-		return Hashing.adler32().newHasher()
-				.putFloat(x).putFloat(y).putFloat(z).putFloat(w).hash().asInt();
+		int result = 43;
+		result = 37 * result + Float.floatToIntBits(x);
+		result = 37 * result + Float.floatToIntBits(y);
+		result = 37 * result + Float.floatToIntBits(z);
+		result = 37 * result + Float.floatToIntBits(w);
+		return result;
 	}
 }
