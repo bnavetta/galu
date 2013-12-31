@@ -20,6 +20,12 @@ public interface Matrix<M extends Matrix<M>>
 	public M subtract(M other);
 	
 	public M multiply(M other);
+	public M divide(M other);
+
+	public M multiply(float scalar);
+
+	public M elementMultiply(M other);
+	public M elementDivide(M other);
 	
 	public void store(FloatBuffer buf, Order order);
 	public void store(float[] array, Order order);

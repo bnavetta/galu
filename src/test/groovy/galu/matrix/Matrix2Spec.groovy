@@ -2,6 +2,9 @@ package galu.matrix
 
 import spock.lang.Specification
 
+import java.nio.FloatBuffer
+import java.nio.HeapFloatBuffer
+
 class Matrix2Spec extends Specification
 {
 	def "row count is 2"()
@@ -88,6 +91,99 @@ class Matrix2Spec extends Specification
 			[0, 2, -2, -5]  | [6, -6, 3, 0]  | [6, 0, -27, 12]
 		    [-3, 5, -2, 1]  | [6, -2, 1, -5] | [-13, -19, -11, -1]
 		    [-5, -5, -1, 2] | [-2, -3, 3, 5] | [-5, -10, 8, 13]
+	}
+
+	def "divide is correct"()
+	{
+		expect:
+			close(new Matrix2(*a).divide(new Matrix2(*b)), new Matrix2(*quotient))
+		where:
+			a                | b                | quotient
+		    [2, -4, 0.5, 8]  | [4, 0.75, 4, 16] | [0.7868852459, -0.2868852459, -0.393442623, 0.518442623]
+	}
+
+	def "scalar multiply is correct"()
+	{
+		expect:
+			close(new Matrix2(*mat).multiply(scalar), new Matrix2(*product))
+		where:
+			mat              | scalar | product
+			[5, 6, 7, 8]     | 2      | [10, 12, 14, 16]
+			[4.4, 7, 100, 3] | 0.5    | [2.2, 3.5, 50, 1.5]
+	}
+
+	def "element multiply is correct"()
+	{
+		expect:
+			close(new Matrix2(*a).elementMultiply(new Matrix2(*b)), new Matrix2(*product))
+		where:
+		    a                     |  b             | product
+			[0.0, 4.7, 1.2, 66.6] | [0, 0, 0, 0]   | [0, 0, 0, 0]
+			[4, 7, 12, 19]        | [0.5, 3, 4, 2] | [2, 21, 48, 38]
+	}
+
+	def "element divide is correct"()
+	{
+		expect:
+			close(new Matrix2(*a).elementDivide(new Matrix2(*b)), new Matrix2(*quotient))
+		where:
+			a                          | b                          | quotient
+		    [4, 16, 35, 9]             | [2, 8, 7, 3]               | [2, 2, 5, 3]
+			[ 0.5, 0.3, 2.0/3.0, 0.12] | [0.5, 0.1, 1.0/3.0, 0.01] | [1, 3, 2, 12]
+	}
+
+	def "row-major storage"()
+	{
+		when:
+		    def array = new float[4]
+			def buffer = FloatBuffer.allocate(4)
+			mat.store(array, Matrix.Order.ROW_MAJOR)
+			mat.store(buffer, Matrix.Order.ROW_MAJOR)
+			buffer.flip()
+			println()
+		then:
+		    Arrays.equals(array, [mat.m00, mat.m01, mat.m10, mat.m11] as float[])
+		    buffer.equals(FloatBuffer.wrap([mat.m00, mat.m01, mat.m10, mat.m11] as float[]))
+		where:
+		    mat << [
+				new Matrix2(0, 5, 8, 4),
+				new Matrix2(1000.1, 0.005, 42, 8)
+		    ]
+	}
+
+	def "column-major storage"()
+	{
+		when:
+			def array = new float[4]
+			def buffer = FloatBuffer.allocate(4)
+		    mat.store(array, Matrix.Order.COLUMN_MAJOR)
+			mat.store(buffer, Matrix.Order.COLUMN_MAJOR)
+			buffer.flip()
+		then:
+		    Arrays.equals(array, [mat.m00, mat.m10, mat.m01, mat.m11] as float[])
+			buffer.equals(FloatBuffer.wrap([mat.m00, mat.m10, mat.m01, mat.m11] as float[]))
+		where:
+		    mat << [
+				new Matrix2(4, 11, 36, 3)
+		    ]
+	}
+
+	def "equals and hash code"()
+	{
+		expect:
+		    a == a
+		    a.hashCode() == a.hashCode()
+		    a != b
+			a.hashCode() != b.hashCode()
+		where:
+			a << [
+				new Matrix2(4, 5, 6, 7),
+				new Matrix2(0.11101001001, 4.4, 123, 63.5)
+			]
+			b << [
+				new Matrix2(7, 6, 5, 4),
+				new Matrix2(4.607, 3.0140639295, 7.2, 2345.4)
+			]
 	}
 
 	void close(Matrix2 a, Matrix2 b)

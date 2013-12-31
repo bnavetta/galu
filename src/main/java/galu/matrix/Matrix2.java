@@ -31,22 +31,26 @@ public class Matrix2 implements Matrix<Matrix2>
 		this.m10 = m10;
 		this.m11 = m11;
 	}
-	
+
+	@Override
 	public int rowCount()
 	{
 		return 2;
 	}
 
+	@Override
 	public int columnCount()
 	{
 		return 2;
 	}
 
+	@Override
 	public float determinant()
 	{
 		return m00 * m11 - m01 * m10;
 	}
 
+	@Override
 	public Matrix2 inverse()
 	{
 		//TODO: check for nonexistant inverse (determinant is 0?)
@@ -54,26 +58,31 @@ public class Matrix2 implements Matrix<Matrix2>
 		return new Matrix2(m11 * factor, -m01 * factor, -m10 * factor, m00 * factor);
 	}
 
+	@Override
 	public Matrix2 negate()
 	{
 		return new Matrix2(-m00, -m01, -m10, -m11);
 	}
 
+	@Override
 	public Matrix2 transpose()
 	{
 		return new Matrix2(m00, m10, m01, m11);
 	}
 
+	@Override
 	public Matrix2 add(Matrix2 other)
 	{
 		return new Matrix2(m00 + other.m00, m01 + other.m01, m10 + other.m10, m11 + other.m11);
 	}
 
+	@Override
 	public Matrix2 subtract(Matrix2 other)
 	{
 		return new Matrix2(m00 - other.m00, m01 - other.m01, m10 - other.m10, m11 - other.m11);
 	}
 
+	@Override
 	public Matrix2 multiply(Matrix2 other)
 	{
 		return new Matrix2(
@@ -82,17 +91,45 @@ public class Matrix2 implements Matrix<Matrix2>
 		);
 	}
 
+	@Override
+	public Matrix2 divide(Matrix2 other)
+	{
+		return multiply(other.inverse());
+	}
+
+	@Override
+	public Matrix2 multiply(float scalar)
+	{
+		return new Matrix2(m00 * scalar, m01 * scalar, m10 * scalar, m11 * scalar);
+	}
+
+	@Override
+	public Matrix2 elementMultiply(Matrix2 other)
+	{
+		return new Matrix2(m00 * other.m00, m01 * other.m01, m10 * other.m10, m11 * other.m11);
+	}
+
+	@Override
+	public Matrix2 elementDivide(Matrix2 other)
+	{
+		return new Matrix2(m00 / other.m00, m01 / other.m01, m10 / other.m10, m11 / other.m11);
+	}
+
+	@Override
 	public void store(FloatBuffer buf, galu.matrix.Matrix.Order order)
 	{
 		switch(order)
 		{
 			case ROW_MAJOR:
 				buf.put(m00).put(m01).put(m10).put(m11);
+				break;
 			case COLUMN_MAJOR:
 				buf.put(m00).put(m10).put(m01).put(m11);
+				break;
 		}
 	}
 
+	@Override
 	public void store(float[] array, galu.matrix.Matrix.Order order) {
 		switch(order)
 		{
@@ -101,11 +138,13 @@ public class Matrix2 implements Matrix<Matrix2>
 				array[1] = m01;
 				array[2] = m10;
 				array[3] = m11;
+				break;
 			case COLUMN_MAJOR:
 				array[0] = m00;
 				array[1] = m10;
-				array[2] = m10;
+				array[2] = m01;
 				array[3] = m11;
+				break;
 		}
 	}
 
