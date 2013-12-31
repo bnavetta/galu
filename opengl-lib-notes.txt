@@ -1,0 +1,39 @@
+Text Rendering
+
+1. Use Cairo/Pango/HarfBuzz to render text
+	-> Using Cairo with OpenGL - http://cairographics.org/OpenGL/
+2. Use Java font APIs
+	-> Sample TrueTypeFont class with no dependencies - http://lwjgl.org/forum/index.php/topic,2951.0.html
+	-> Java text layout - http://docs.oracle.com/javase/tutorial/2d/text/textlayoutbidirectionaltext.html#performing_text_layout_in_a_java_application
+		-> Use GlyphVector / TextLayout
+		-> Can get bounds of glyph as a Shape and iterate over the points on the shape
+		-> Turn polygon(s) from glyph into triangles
+			-> poly2tri Delaunay triangulation library - https://code.google.com/p/poly2tri/
+			-> Suggestions on StackOverflow - http://stackoverflow.com/questions/406301/polygon-triangulation-with-holes
+			-> Use GLU tesselator (LWJGL supports it)
+				-> Using GLU tesselator - http://www.flipcode.com/archives/Polygon_Tessellation_In_OpenGL.shtml
+		-> Eclipse class implementing tesselator-based LWJGL font - https://eclipse.googlesource.com/gef3d/org.eclipse.gef3d/+/better_lod/org.eclipse.draw3d.font/src/org/eclipse/draw3d/font/lwjgl/LwjglVectorFont.java
+		-> OpenGL 4 has tesselation shaders
+			-> Example for using them (and other shader types) - http://prideout.net/blog/?p=48
+
+
+Drawing Things
+
+Represent models as a vertex array object - contains a reference to the VBO, how to bind attributes, etc. - can just bind the VAO instead of redoing the setup
+
+*Requires OpenGL 3.3
+The LWJGL Quad tutorials on the wiki under "OpenGL 3.2 and Newer" are good - how to use VBO's, etc. w/ LWJGL
+
+Use instancing to redraw the mesh in different locations - http://www.opengl.org/wiki/Vertex_Rendering#Instancing
+	-> Example code for instancing with Uniform Buffer Objects - https://github.com/progschj/OpenGL-Examples/blob/master/06instancing3_uniform_buffer.cpp
+	-> Some ideas on instancing http://sol.gfxile.net/instancing.html
+	
+Buffer Textures
+	-> Can be a lot bigger than uniform buffer objects
+	-> Use a Texture to pass a chunk of memory to a shader
+
+Use this modern OpenGL tutorial: http://open.gl/
+
+Usually, everyone's model is a bit different (textures, colors, etc.)
+Have a tool that generates implementation code and a shader from an interface (put as much code as possible in a parent class so it can be edited)
+
