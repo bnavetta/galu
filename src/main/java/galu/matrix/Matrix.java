@@ -2,7 +2,6 @@ package galu.matrix;
 
 import java.nio.FloatBuffer;
 
-
 public interface Matrix<M extends Matrix<M>>
 {
 	public int rowCount();

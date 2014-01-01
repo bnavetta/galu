@@ -1,9 +1,27 @@
 package galu.matrix;
 
+import galu.vector.Vector2;
+
 import java.nio.FloatBuffer;
+
+import static com.google.common.base.Preconditions.*;
 
 public class Matrix2 implements Matrix<Matrix2>
 {
+	/**
+	 * The 2x2 identity matrix.
+	 * <pre>
+	 * | 1 0 |
+	 * | 0 1 |
+	 * </pre>
+	 */
+	public static final Matrix2 IDENTITY = new Matrix2(1, 0, 0, 1);
+
+	/**
+	 * The zero matrix. All elements are {@code 0}.
+	 */
+	public static final Matrix2 ZERO = new Matrix2(0, 0, 0, 0);
+
 	/**
 	 * a
 	 */
@@ -115,6 +133,14 @@ public class Matrix2 implements Matrix<Matrix2>
 		return new Matrix2(m00 / other.m00, m01 / other.m01, m10 / other.m10, m11 / other.m11);
 	}
 
+	public Vector2 transform(Vector2 vec)
+	{
+		// Note to self: when using LWJGL's matrix/vector code for reference, they use variables of the form m{c}{r}, but we use m{r}{c}
+		float x = m00 * vec.x + m01 * vec.y;
+		float y = m10 * vec.x + m11 * vec.y;
+		return new Vector2(x, y);
+	}
+
 	@Override
 	public void store(FloatBuffer buf, galu.matrix.Matrix.Order order)
 	{
@@ -148,10 +174,42 @@ public class Matrix2 implements Matrix<Matrix2>
 		}
 	}
 
+	public static Matrix2 load(float[] array, Order order)
+	{
+		checkArgument(array.length >= 4, "Array must have at least 4 elements, the given array has %d", array.length);
+		switch(order)
+		{
+			case ROW_MAJOR:
+				return new Matrix2(array[0], array[1], array[2], array[3]);
+			case COLUMN_MAJOR:
+				return new Matrix2(array[0], array[2], array[1], array[3]);
+			default:
+				throw new IllegalArgumentException("Unsupported matrix ordering: " + order);
+		}
+	}
+
+	public static Matrix2 load(FloatBuffer buffer, Order order)
+	{
+		checkArgument(buffer.remaining() >= 4, "Buffer has fewer than 4 elements remaining (%s)", buffer);
+		switch(order)
+		{
+			case ROW_MAJOR:
+				return new Matrix2(buffer.get(), buffer.get(), buffer.get(), buffer.get());
+			case COLUMN_MAJOR:
+				float m00 = buffer.get();
+				float m10 = buffer.get();
+				float m01 = buffer.get();
+				float m11 = buffer.get();
+				return new Matrix2(m00, m01, m10, m11);
+			default:
+				throw new IllegalArgumentException("Unsupported matrix ordering: " + order);
+		}
+	}
+
 	@Override
 	public String toString()
 	{
-		return String.format("[%f %f, %f %f]", m00, m01, m10, m11);
+		return "[" + m00 + " " + m01 + "\n" + m10 + " " + m11 + "]";
 	}
 
 	@Override

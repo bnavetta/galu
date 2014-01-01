@@ -1,5 +1,6 @@
 package galu.matrix
 
+import galu.vector.Vector2
 import spock.lang.Specification
 
 import java.nio.FloatBuffer
@@ -168,6 +169,89 @@ class Matrix2Spec extends Specification
 		    ]
 	}
 
+	def "row-major loading"()
+	{
+		when:
+			def array = stored as float[]
+			def buffer = FloatBuffer.wrap(array)
+			def arrMat = Matrix2.load(array, Matrix.Order.ROW_MAJOR)
+			def bufMat = Matrix2.load(buffer, Matrix.Order.ROW_MAJOR)
+			def expected = new Matrix2(*stored)
+		then:
+		    close(arrMat, expected)
+			close(bufMat, expected)
+		where:
+			stored << [
+				[5.6, 245.534, 3.432, 134.3],
+				[56, 23, 84, 1234]
+			]
+	}
+
+	def "column-major loading"()
+	{
+		when:
+			def array = [stored[0], stored[2], stored[1], stored[3]] as float[]
+			def buffer = FloatBuffer.wrap(array)
+		    def arrMat = Matrix2.load(array, Matrix.Order.COLUMN_MAJOR)
+			def bufMat = Matrix2.load(buffer, Matrix.Order.COLUMN_MAJOR)
+			def expected = new Matrix2(*stored)
+		then:
+			close(arrMat, expected)
+			close(bufMat, expected)
+		where:
+			stored << [
+			    [6.234, 2534.3, 1234.13, 6.42],
+				[6, 42, 56, 27]
+			]
+	}
+
+	def "transform works correctly"()
+	{
+		expect:
+			close(mat.transform(vec), result)
+
+		where:
+			mat << [
+				new Matrix2(0, 1, 1, 0),
+				new Matrix2(-1, 0, 0, -1),
+				new Matrix2(0, -5, 7, 0)
+			]
+			vec << [
+				new Vector2(4, 3),
+				new Vector2(4, 3),
+				new Vector2(4, 3)
+			]
+			result << [
+				new Vector2(3, 4),
+				new Vector2(-4, -3),
+				new Vector2(-15,  28)
+			]
+	}
+
+	def "identity matrix has no effect"()
+	{
+		expect:
+			mat.multiply(Matrix2.IDENTITY).equals(mat)
+			Matrix2.IDENTITY.multiply(mat).equals(mat)
+		 where:
+		    mat << [
+				new Matrix2(1, 6, 3, 6),
+				new Matrix2(6.773, 12354.34, 234.23456, 1234.213)
+		    ]
+	}
+
+	def "zero matrix zeroes product"()
+	{
+		expect:
+		    mat.multiply(Matrix2.ZERO).equals(Matrix2.ZERO)
+			Matrix2.ZERO.multiply(mat).equals(Matrix2.ZERO)
+		where:
+			mat << [
+			    new Matrix2(6, 1, 4325, 234),
+				new Matrix2(45.2, 234.234, 24.212342, 2.42324)
+			]
+	}
+
 	def "equals and hash code"()
 	{
 		expect:
@@ -184,6 +268,12 @@ class Matrix2Spec extends Specification
 				new Matrix2(7, 6, 5, 4),
 				new Matrix2(4.607, 3.0140639295, 7.2, 2345.4)
 			]
+	}
+
+	void close(Vector2 a, Vector2 b)
+	{
+		assert close(a.x, b.x)
+		assert close(a.y, b.y)
 	}
 
 	void close(Matrix2 a, Matrix2 b)
