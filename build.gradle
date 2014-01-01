@@ -1,7 +1,10 @@
 apply plugin: 'java'
 apply plugin: 'groovy'
+
 apply plugin: 'eclipse'
 apply plugin: 'idea'
+
+apply plugin: 'jacoco'
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
@@ -18,6 +21,10 @@ ext {
 	]
 }
 
+/*
+    Dependency Management
+ */
+
 repositories {
     mavenCentral()
 }
@@ -28,6 +35,28 @@ dependencies {
     testCompile "org.spockframework:spock-core:$versions.spock"
     testCompile "org.codehaus.groovy:groovy-all:$versions.groovy"
 }
+
+/*
+    JaCoCo
+ */
+
+jacoco {
+	toolVersion = '0.6.4.201312101107'
+}
+
+tasks.withType(JacocoReport).all {
+	reports {
+		xml.enabled true
+		csv.enabled false
+		html.enabled true
+	}
+
+	check.dependsOn it
+}
+
+/*
+    Gradle Wrapper
+ */
 
 task wrapper(type: Wrapper) {
 	gradleVersion = 1.10

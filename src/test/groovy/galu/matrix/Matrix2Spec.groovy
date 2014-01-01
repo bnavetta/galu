@@ -169,6 +169,38 @@ class Matrix2Spec extends Specification
 		    ]
 	}
 
+	def "too-small array loading"()
+	{
+		when:
+		Matrix2.load(new float[3], Matrix.Order.COLUMN_MAJOR)
+		then:
+		thrown(IllegalArgumentException)
+	}
+
+	def "too-small buffer loading"()
+	{
+		when:
+		Matrix2.load(FloatBuffer.allocate(3), Matrix.Order.ROW_MAJOR)
+		then:
+		thrown(IllegalArgumentException)
+	}
+
+	def "too-small array storing"()
+	{
+		when:
+		new Matrix2(1, 2, 3, 4).store(new float[3], Matrix.Order.COLUMN_MAJOR)
+		then:
+		thrown(IllegalArgumentException)
+	}
+
+	def "too-small buffer storing"()
+	{
+		when:
+		new Matrix2(1, 2, 3, 4).store(FloatBuffer.allocate(3), Matrix.Order.COLUMN_MAJOR)
+		then:
+		thrown(IllegalArgumentException)
+	}
+
 	def "row-major loading"()
 	{
 		when:
@@ -204,6 +236,45 @@ class Matrix2Spec extends Specification
 				[6, 42, 56, 27]
 			]
 	}
+
+	/*
+
+    For some reason, we're getting a NPE in the spec class before load/store is actually called. Maybe it's Spock?
+
+	def "load array blows up with null ordering"()
+	{
+		when:
+//			Matrix2.load([1, 2, 3, 4] as float[], Matrix.Order.COLUMN_MAJOR)
+		    Matrix2.load(new float[4], (Matrix.Order) null)
+		then:
+			thrown(IllegalArgumentException)
+	}
+
+	def "load buffer blows up with null ordering"()
+	{
+		when:
+			Matrix2.load(FloatBuffer.allocate(4), null)
+		then:
+			thrown(IllegalArgumentException)
+	}
+
+	def "store array blows up with null ordering"()
+	{
+		when:
+			new Matrix2(1, 2, 3, 4).store(new float[4], null)
+		then:
+			thrown(IllegalArgumentException)
+	}
+
+	def "store buffer blows up with null ordering"()
+	{
+		when:
+			new Matrix2(1, 2, 3, 4).store(FloatBuffer.allocate(4), null)
+		then:
+			thrown(IllegalArgumentException)
+	}
+
+	*/
 
 	def "transform works correctly"()
 	{
@@ -252,7 +323,7 @@ class Matrix2Spec extends Specification
 			]
 	}
 
-	def "equals and hash code"()
+	def "basic equals and hash code"()
 	{
 		expect:
 		    a == a
@@ -268,6 +339,25 @@ class Matrix2Spec extends Specification
 				new Matrix2(7, 6, 5, 4),
 				new Matrix2(4.607, 3.0140639295, 7.2, 2345.4)
 			]
+	}
+
+	def "special cases of equals"()
+	{
+		expect:
+		new Matrix2(1, 2, 3, 4).equals(null) == false
+		new Matrix2(1, 2, 3, 4).equals("I'm a matrix") == false
+
+		Matrix mat = new Matrix2(1, 2, 3, 4)
+		assert mat.equals(mat) == true
+	}
+
+	def "toString looks right"()
+	{
+		expect:
+			mat.toString() == text
+		where:
+			mat                        |  text
+			new Matrix2(5, 3, 2, 11)   | "[5.0000 3.0000\n2.0000 11.0000]"
 	}
 
 	void close(Vector2 a, Vector2 b)

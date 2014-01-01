@@ -5,6 +5,7 @@ import galu.vector.Vector2;
 import java.nio.FloatBuffer;
 
 import static com.google.common.base.Preconditions.*;
+import static com.google.common.base.Preconditions.checkArgument;
 
 public class Matrix2 implements Matrix<Matrix2>
 {
@@ -41,6 +42,14 @@ public class Matrix2 implements Matrix<Matrix2>
 	 * d
 	 */
 	public final float m11;
+
+	/*
+	 I won't bother with method access for elements like in Vector* because
+	    - the if-else chain would be hideous (especially in larger matrices)
+	    - it doesn't quite fit in a library designed for graphics - don't handle arbitrary dimensions, etc.
+	 The access methods in Vector* will probably get deprecated at some point.
+     Methods to get rows/columns as vectors *might* be useful.
+	  */
 	
 	public Matrix2(float m00, float m01, float m10, float m11)
 	{
@@ -144,6 +153,7 @@ public class Matrix2 implements Matrix<Matrix2>
 	@Override
 	public void store(FloatBuffer buf, galu.matrix.Matrix.Order order)
 	{
+		checkArgument(buf.remaining() >= 4, "Buffer has fewer than 4 elements remaining (%s)", buf);
 		switch(order)
 		{
 			case ROW_MAJOR:
@@ -152,11 +162,15 @@ public class Matrix2 implements Matrix<Matrix2>
 			case COLUMN_MAJOR:
 				buf.put(m00).put(m10).put(m01).put(m11);
 				break;
+			default:
+				throw new IllegalArgumentException("Unsupported matrix ordering: " + order);
 		}
 	}
 
 	@Override
-	public void store(float[] array, galu.matrix.Matrix.Order order) {
+	public void store(float[] array, galu.matrix.Matrix.Order order)
+	{
+		checkArgument(array.length >= 4, "Array must have at least 4 elements, the given array has %d", array.length);
 		switch(order)
 		{
 			case ROW_MAJOR:
@@ -171,6 +185,8 @@ public class Matrix2 implements Matrix<Matrix2>
 				array[2] = m01;
 				array[3] = m11;
 				break;
+			default:
+				throw new IllegalArgumentException("Unsupported matrix ordering: " + order);
 		}
 	}
 
@@ -209,7 +225,8 @@ public class Matrix2 implements Matrix<Matrix2>
 	@Override
 	public String toString()
 	{
-		return "[" + m00 + " " + m01 + "\n" + m10 + " " + m11 + "]";
+//		return "[" + m00 + " " + m01 + "\n" + m10 + " " + m11 + "]";
+		return String.format("[%.4f %.4f\n%.4f %.4f]", m00, m01, m10, m11);
 	}
 
 	@Override
