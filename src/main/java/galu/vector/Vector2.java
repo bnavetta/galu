@@ -15,11 +15,6 @@ public final class Vector2 implements Vector<Vector2>
 		this.y = y;
 	}
 	
-	public Vector2(Vector2 other)
-	{
-		this(other.x, other.y);
-	}
-	
 	public int size()
 	{
 		return 2;

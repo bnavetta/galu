@@ -19,11 +19,6 @@ public final class Vector4 implements Vector<Vector4>
 		this.w = w;
 	}
 	
-	public Vector4(Vector4 other)
-	{
-		this(other.x, other.y, other.z, other.w);
-	}
-	
 	public int size()
 	{
 		return 4;

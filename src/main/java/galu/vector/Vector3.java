@@ -17,11 +17,6 @@ public class Vector3 implements Vector<Vector3>
 		this.z = z;
 	}
 	
-	public Vector3(Vector3 other)
-	{
-		this(other.x, other.y, other.z);
-	}
-	
 	public int size()
 	{
 		return 3;
