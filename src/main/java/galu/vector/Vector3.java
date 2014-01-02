@@ -118,7 +118,7 @@ public class Vector3 implements Vector<Vector3>
 	@Override
 	public String toString()
 	{
-		return String.format("[%f, %f, %f]", x, y, z);
+		return String.format("(%.4f, %.4f, %.4f)", x, y, z);
 	}
 	
 	@Override

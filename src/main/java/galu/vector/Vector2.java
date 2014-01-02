@@ -114,7 +114,7 @@ public final class Vector2 implements Vector<Vector2>
 	@Override
 	public String toString()
 	{
-		return String.format("[%f, %f]", x, y);
+		return String.format("(%.4f, %.4f)", x, y);
 	}
 	
 	@Override

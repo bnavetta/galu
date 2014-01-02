@@ -123,7 +123,7 @@ public final class Vector4 implements Vector<Vector4>
 	@Override
 	public String toString()
 	{
-		return String.format("[%f, %f, %f, %f]", x, y, z, w);
+		return String.format("(%.4f, %.4f, %.4f, %.4f)", x, y, z, w);
 	}
 	
 	@Override
