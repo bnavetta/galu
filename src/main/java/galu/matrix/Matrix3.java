@@ -1,5 +1,7 @@
 package galu.matrix;
 
+import galu.vector.Vector3;
+
 import java.nio.FloatBuffer;
 
 import static com.google.common.base.Preconditions.*;
@@ -78,7 +80,7 @@ public class Matrix3 implements Matrix<Matrix3>
 	public Matrix3 add(Matrix3 other)
 	{
 		return new Matrix3(m00 + other.m00, m01 + other.m01, m02 + other.m02,
-		                   m10 + other.m10, m11 + other.m11, m12 + other.m22,
+		                   m10 + other.m10, m11 + other.m11, m12 + other.m12,
 		                   m20 + other.m20, m21 + other.m21, m22 + other.m22);
 	}
 
@@ -86,7 +88,7 @@ public class Matrix3 implements Matrix<Matrix3>
 	public Matrix3 subtract(Matrix3 other)
 	{
 		return new Matrix3(m00 - other.m00, m01 - other.m01, m02 - other.m02,
-		                   m10 - other.m10, m11 - other.m11, m12 - other.m22,
+		                   m10 - other.m10, m11 - other.m11, m12 - other.m12,
 		                   m20 - other.m20, m21 - other.m21, m22 - other.m22);
 	}
 
@@ -138,6 +140,14 @@ public class Matrix3 implements Matrix<Matrix3>
 		                   m20/other.m20, m21/other.m21, m22/other.m22);
 	}
 
+	public Vector3 transform(Vector3 vec)
+	{
+		float x = m00 * vec.x + m01 * vec.y + m02 * vec.z;
+		float y = m10 * vec.x + m11 * vec.y + m12 * vec.z;
+		float z = m20 * vec.x + m21 * vec.y + m22 * vec.z;
+		return new Vector3(x, y, z);
+	}
+
 	@Override
 	public void store(FloatBuffer buf, Order order)
 	{
@@ -153,6 +163,7 @@ public class Matrix3 implements Matrix<Matrix3>
 				buf.put(m00).put(m10).put(m20)
 				   .put(m01).put(m11).put(m21)
 				   .put(m02).put(m12).put(m22);
+				break;
 			default:
 				throw new IllegalArgumentException("Unsupported matrix ordering: " + order);
 		}
