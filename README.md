@@ -2,6 +2,9 @@
 
 A group of useful libraries and tools for making games with OpenGL. Currently, it's just a matrix/vector library, but more will come.
 
+The name 'galu' is Vulcan for 'atom'. The 'g' seems required because it's a graphics library, and I liked the sound of the rest of it.
+If there was any deeper reason, I have no idea what that reason was.
+
 ***
 
 ### Math
