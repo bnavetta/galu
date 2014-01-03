@@ -1,62 +1,52 @@
-apply plugin: 'java'
-apply plugin: 'groovy'
+allprojects {
+	apply plugin: 'eclipse'
+	apply plugin: 'idea'
+	
+	group = 'com.bennavetta.galu'
+	version = '1.0'
 
-apply plugin: 'eclipse'
-apply plugin: 'idea'
-
-apply plugin: 'jacoco'
-
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
-
-group = 'com.bennavetta.galu'
-version = '1.0'
-
-ext {
-	versions = [
-		guava: '15.0',
-		spock: '0.7-groovy-2.0',
-//		groovy: '2.1.9' // wait for groovy-eclipse to support 2.2
-		groovy: '2.2.1'
-	]
+	ext {
+		versions = [
+			guava: '15.0',
+			spock: '0.7-groovy-2.0',
+			groovy: '2.2.1'
+		]
+	}
+	
+	repositories {
+		mavenCentral()
+	}
 }
 
-/*
-    Dependency Management
- */
+subprojects {
+	apply plugin: 'java'
+	apply plugin: 'groovy'
 
-repositories {
-    mavenCentral()
-}
+	apply plugin: 'jacoco'
+	
+	sourceCompatibility = 1.7
+	targetCompatibility = 1.7
 
-dependencies {
-    compile "com.google.guava:guava:$versions.guava"
-    
-    testCompile "org.spockframework:spock-core:$versions.spock"
-    testCompile "org.codehaus.groovy:groovy-all:$versions.groovy"
-}
-
-/*
-    JaCoCo
- */
-
-jacoco {
-	toolVersion = '0.6.4.201312101107'
-}
-
-tasks.withType(JacocoReport).all {
-	reports {
-		xml.enabled true
-		csv.enabled false
-		html.enabled true
+	dependencies {
+		testCompile "org.spockframework:spock-core:$versions.spock"
+		testCompile "org.codehaus.groovy:groovy-all:$versions.groovy"
 	}
 
-	check.dependsOn it
-}
 
-/*
-    Gradle Wrapper
- */
+	jacoco {
+		toolVersion = '0.6.4.201312101107'
+	}
+
+	tasks.withType(JacocoReport).all {
+		reports {
+			xml.enabled true
+			csv.enabled false
+			html.enabled true
+		}
+
+		check.dependsOn it
+	}
+}
 
 task wrapper(type: Wrapper) {
 	gradleVersion = 1.10

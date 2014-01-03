@@ -1,0 +1,16 @@
+include 'galu-math'
+
+rootProject.name = 'galu'
+
+def setBuildFile(project)
+{
+	project.buildFileName = "${project.name}.gradle"
+	project.children.each {
+		setBuildFile(it)
+	}
+}
+
+// Don't want to change root project build file
+rootProject.children.each {
+	setBuildFile(it)
+}
