@@ -1,12 +1,8 @@
 package galu.vector
 
-import galu.vector.tester.Vector3Data
+import spock.lang.Specification
 
-class Vector3Spec extends AbstractVectorSpec
+class Vector3Spec extends Specification
 {
-	def setupSpec()
-	{
-		type = Vector3.class
-		data = new Vector3Data()
-	} 
+
 }
