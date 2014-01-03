@@ -1,0 +1,69 @@
+/* ======================== */
+/* = Root Project Reports = */
+/* ======================== */
+
+configurations {
+	jacoco {
+		description "Dependencies for the aggregate JaCoCo reports"
+	}
+}
+
+dependencies {
+	jacoco "org.jacoco:org.jacoco.ant:$versions.jacoco"
+}
+
+// http://stackoverflow.com/questions/16921384/aggregating-gradle-multiproject-test-results-using-testreport
+task testReport(type: TestReport) {
+	destinationDir = file("${rootProject.buildDir}/reports/tests")
+	reportOn subprojects*.test
+}
+
+// http://forums.gradle.org/gradle/topics/gradle_1_6_jacoco_in_multi_module_build
+task jacocoReport(type: JacocoReport) {
+	jacocoClasspath = configurations.jacoco
+	
+	// Execution data from all subprojects
+	executionData fileTree(project.rootDir.absolutePath).include('*/build/jacoco/*.exec')
+	
+	// Source files from all subprojects
+	subprojects.each {
+		sourceSets it.sourceSets.main
+		
+		dependsOn it.test
+	}
+	
+	reports {
+		html {
+			enabled true
+			destination rootProject.file("$rootProject.buildDir/reports/jacoco/html")
+		}
+		xml {
+			enabled true
+			destination rootProject.file("$rootProject.buildDir/reports/jacoco/jacocoTestReport.xml")
+		}
+	}
+}
+
+check.dependsOn testReport, jacocoReport
+
+/* ====================== */
+/* = Subproject Reports = */
+/* ====================== */
+
+subprojects {
+	apply plugin: 'jacoco'
+	
+	jacoco {
+		toolVersion = versions.jacoco
+	}
+
+	tasks.withType(JacocoReport).all {
+		reports {
+			xml.enabled true
+			csv.enabled false
+			html.enabled true
+		}
+
+		check.dependsOn it
+	}
+}
