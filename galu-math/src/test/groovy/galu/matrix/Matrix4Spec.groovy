@@ -243,6 +243,43 @@ class Matrix4Spec extends Specification
 			thrown(IllegalArgumentException)
 	}
 
+	def "4 x 4 matrix equality and hashCode"()
+	{
+		given:
+			def matrix = new Matrix4(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16)
+			def same = new Matrix4(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16)
+			def different = new Matrix4(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 42)
+		expect:
+			matrix.equals(matrix) == true
+			matrix.equals(null) == false
+			matrix.equals("I'm a matrix") == false
+			matrix.equals(same) == true
+			matrix.equals(different) == false
+
+			// Check with first different element in position 0, 1, ...
+		    16.times { goodIdx ->
+			    def values = []
+			    goodIdx.times {
+				    values << it + 1
+			    }
+			    (16-goodIdx).times {
+				    values << 20 - it
+			    }
+			    matrix.equals(new Matrix4(*values)) == false
+		    }
+
+			matrix.hashCode() == matrix.hashCode()
+			matrix.hashCode() == same.hashCode()
+			matrix.hashCode() != different.hashCode()
+	}
+
+	def "toString is properly formatted"()
+	{
+		expect:
+			new Matrix4(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16).toString() ==
+					"[1.0000 2.0000 3.0000 4.0000\n5.0000 6.0000 7.0000 8.0000\n9.0000 10.0000 11.0000 12.0000\n13.0000 14.0000 15.0000 16.0000]"
+	}
+
 	//TODO: move all the assertClose methods in test classes into one helper
 
 	void assertClose(Matrix4 a, Matrix4 b, float delta = 0.01)

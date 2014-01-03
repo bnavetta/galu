@@ -338,4 +338,69 @@ public final class Matrix4 implements Matrix<Matrix4>
 				throw new IllegalArgumentException("Unsupported matrix ordering: " + order);
 		}
 	}
+
+	@Override
+	public String toString()
+	{
+		return String.format("[%.4f %.4f %.4f %.4f\n%.4f %.4f %.4f %.4f\n%.4f %.4f %.4f %.4f\n%.4f %.4f %.4f %.4f]",
+		                     m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33);
+	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		if(obj == null) return false;
+		if(obj == this) return true;
+		if(!(obj instanceof Matrix4)) return false;
+
+		Matrix4 other = (Matrix4) obj;
+
+		return Float.floatToIntBits(m00) == Float.floatToIntBits(other.m00) &&
+		       Float.floatToIntBits(m01) == Float.floatToIntBits(other.m01) &&
+		       Float.floatToIntBits(m02) == Float.floatToIntBits(other.m02) &&
+			   Float.floatToIntBits(m03) == Float.floatToIntBits(other.m03) &&
+
+		       Float.floatToIntBits(m10) == Float.floatToIntBits(other.m10) &&
+		       Float.floatToIntBits(m11) == Float.floatToIntBits(other.m11) &&
+		       Float.floatToIntBits(m12) == Float.floatToIntBits(other.m12) &&
+			   Float.floatToIntBits(m13) == Float.floatToIntBits(other.m13) &&
+
+		       Float.floatToIntBits(m20) == Float.floatToIntBits(other.m20) &&
+		       Float.floatToIntBits(m21) == Float.floatToIntBits(other.m21) &&
+		       Float.floatToIntBits(m22) == Float.floatToIntBits(other.m22) &&
+			   Float.floatToIntBits(m23) == Float.floatToIntBits(other.m23) &&
+
+			   Float.floatToIntBits(m30) == Float.floatToIntBits(other.m30) &&
+			   Float.floatToIntBits(m31) == Float.floatToIntBits(other.m31) &&
+			   Float.floatToIntBits(m32) == Float.floatToIntBits(other.m32) &&
+			   Float.floatToIntBits(m33) == Float.floatToIntBits(other.m33);
+	}
+
+	@Override
+	public int hashCode()
+	{
+		int result = 79;
+
+		result = 37 * result + Float.floatToIntBits(m00);
+		result = 37 * result + Float.floatToIntBits(m01);
+		result = 37 * result + Float.floatToIntBits(m02);
+		result = 37 * result + Float.floatToIntBits(m03);
+
+		result = 37 * result + Float.floatToIntBits(m10);
+		result = 37 * result + Float.floatToIntBits(m11);
+		result = 37 * result + Float.floatToIntBits(m12);
+		result = 37 * result + Float.floatToIntBits(m13);
+
+		result = 37 * result + Float.floatToIntBits(m20);
+		result = 37 * result + Float.floatToIntBits(m21);
+		result = 37 * result + Float.floatToIntBits(m22);
+		result = 37 * result + Float.floatToIntBits(m23);
+
+		result = 37 * result + Float.floatToIntBits(m30);
+		result = 37 * result + Float.floatToIntBits(m31);
+		result = 37 * result + Float.floatToIntBits(m32);
+		result = 37 * result + Float.floatToIntBits(m33);
+
+		return result;
+	}
 }
