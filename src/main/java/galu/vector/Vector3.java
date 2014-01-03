@@ -4,7 +4,7 @@ import java.nio.FloatBuffer;
 
 import com.google.common.hash.Hashing;
 
-public class Vector3 implements Vector<Vector3>
+public final class Vector3 implements Vector<Vector3>
 {
 	public final float x;
 	public final float y;

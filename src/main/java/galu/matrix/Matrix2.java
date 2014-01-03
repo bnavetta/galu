@@ -7,7 +7,7 @@ import java.nio.FloatBuffer;
 import static com.google.common.base.Preconditions.*;
 import static com.google.common.base.Preconditions.checkArgument;
 
-public class Matrix2 implements Matrix<Matrix2>
+public final class Matrix2 implements Matrix<Matrix2>
 {
 	/**
 	 * The 2x2 identity matrix.

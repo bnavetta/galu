@@ -6,7 +6,7 @@ import java.nio.FloatBuffer;
 
 import static com.google.common.base.Preconditions.*;
 
-public class Matrix3 implements Matrix<Matrix3>
+public final class Matrix3 implements Matrix<Matrix3>
 {
 	public final float m00, m01, m02,
 	                   m10, m11, m12,
