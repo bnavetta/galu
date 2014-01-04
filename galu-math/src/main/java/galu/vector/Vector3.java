@@ -4,6 +4,8 @@ import java.nio.FloatBuffer;
 
 import com.google.common.hash.Hashing;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 public final class Vector3 implements Vector<Vector3>
 {
 	public final float x;
@@ -90,11 +92,13 @@ public final class Vector3 implements Vector<Vector3>
 
 	public void store(FloatBuffer buf)
 	{
+		checkArgument(buf.remaining() >= 3, "Buffer has fewer than 3 elements remaining (%s)", buf);
 		buf.put(x).put(y).put(z);
 	}
 
 	public void store(float[] array)
 	{
+		checkArgument(array.length >= 3, "Array has fewer than 3 elements (%d)", array.length);
 		array[0] = x;
 		array[1] = y;
 		array[2] = z;
@@ -107,12 +111,14 @@ public final class Vector3 implements Vector<Vector3>
 
 	public static Vector3 load(FloatBuffer buffer)
 	{
+		checkArgument(buffer.remaining() >= 3, "Buffer has fewer than 3 elements remaining (%s)", buffer);
 		return new Vector3(buffer.get(), buffer.get(), buffer.get());
 	}
 	
-	public static Vector3 load(float[] buffer)
+	public static Vector3 load(float[] array)
 	{
-		return new Vector3(buffer[0], buffer[1], buffer[2]);
+		checkArgument(array.length >= 3, "Array has fewer than 3 elements (%d)", array.length);
+		return new Vector3(array[0], array[1], array[2]);
 	}
 	
 	@Override

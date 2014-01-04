@@ -59,6 +59,8 @@ class Vector2Spec extends Specification
 			new Vector2(3.2, 3.2)	|	new Vector2(3.2, 3.2)	|	true
 			new Vector2(7, 6)		| 	new Vector2(100, 77)	|	false
 			new Vector2(1, 2)		| 	null					|	false
+			new Vector2(1, 2)       |   new Vector2(1, 3)       |   false
+			new Vector2(1, 2)       |   new Vector2(0, 1)       |   false
 	}
 
 	def "special cases of equals"()
@@ -191,6 +193,24 @@ class Vector2Spec extends Specification
 			that(array[1], closeTo(2.0, 0.001))
 	}
 
+	def "store into too-small array"()
+	{
+		when:
+		new Vector2(1, 2).store(new float[1])
+
+		then:
+		thrown(IllegalArgumentException)
+	}
+
+	def "store into too-small buffer"()
+	{
+		when:
+		new Vector2(1, 2).store(FloatBuffer.allocate(1))
+
+		then:
+		thrown(IllegalArgumentException)
+	}
+
 	def "convert to array"()
 	{
 		expect:
@@ -216,6 +236,24 @@ class Vector2Spec extends Specification
 			Vector2 vec = Vector2.load(array)
 			that vec.x, closeTo(1.0, 0.001)
 			that vec.y, closeTo(2.0, 0.001)
+	}
+
+	def "load from too-small array"()
+	{
+		when:
+		Vector2.load(new float[1])
+
+		then:
+		thrown(IllegalArgumentException)
+	}
+
+	def "load from too-small buffer"()
+	{
+		when:
+		Vector2.load(FloatBuffer.allocate(1))
+
+		then:
+		thrown(IllegalArgumentException)
 	}
 
 	def "toString follows vector conventions"()
