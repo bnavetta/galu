@@ -23,7 +23,7 @@ public class Vector2Close extends TypeSafeDiagnosingMatcher<Vector2>
 		description
 			.appendText("a vector whose elements are within ")
 			.appendValue(delta)
-			.appendValue(" those of ")
+			.appendText(" of those of ")
 			.appendValue(expected);
 	}
 
@@ -32,13 +32,25 @@ public class Vector2Close extends TypeSafeDiagnosingMatcher<Vector2>
 	{
 		if(!close(item.x, expected.x, delta))
 		{
-			mismatchDescription.appendText("x differed by ").appendValue(item.x - expected.x);
+			mismatchDescription
+					.appendText("x-value ")
+					.appendValue(item.x)
+					.appendText(" differed from expected value ")
+					.appendValue(expected.x)
+					.appendText(" by ")
+					.appendValue(Math.abs(item.x - expected.x));
 			return false;
 		}
 
 		if(!close(item.y, expected.y, delta))
 		{
-			mismatchDescription.appendText("y differed by ").appendValue(item.y - expected.y);
+			mismatchDescription
+					.appendText("y-value ")
+					.appendValue(item.y)
+					.appendText(" differed from expected value ")
+					.appendValue(expected.y)
+					.appendText(" by ")
+					.appendValue(Math.abs(item.y - expected.y));
 			return false;
 		}
 
