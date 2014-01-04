@@ -333,11 +333,19 @@ class Matrix2Spec extends Specification
 		where:
 			a << [
 				new Matrix2(4, 5, 6, 7),
-				new Matrix2(0.11101001001, 4.4, 123, 63.5)
+				new Matrix2(0.11101001001, 4.4, 123, 63.5),
+				new Matrix2(1, 2, 3, 4),
+				new Matrix2(1, 2, 3, 4),
+				new Matrix2(1, 2, 3, 4),
+				new Matrix2(1, 2, 3, 4)
 			]
 			b << [
 				new Matrix2(7, 6, 5, 4),
-				new Matrix2(4.607, 3.0140639295, 7.2, 2345.4)
+				new Matrix2(4.607, 3.0140639295, 7.2, 2345.4),
+				new Matrix2(0, 1, 2, 3),
+				new Matrix2(1, 3, 4, 5),
+				new Matrix2(1, 2, 4, 5),
+				new Matrix2(1, 2, 3, 5)
 			]
 	}
 
