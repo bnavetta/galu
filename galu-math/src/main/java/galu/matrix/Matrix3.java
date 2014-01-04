@@ -8,6 +8,12 @@ import static com.google.common.base.Preconditions.*;
 
 public final class Matrix3 implements Matrix<Matrix3>
 {
+	public static final Matrix3 IDENTITY = new Matrix3(
+		1, 0, 0,
+	    0, 1, 0,
+	    0, 0, 1
+	);
+
 	public final float m00, m01, m02,
 	                   m10, m11, m12,
 	                   m20, m21, m22;

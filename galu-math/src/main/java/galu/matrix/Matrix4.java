@@ -9,6 +9,13 @@ import static com.google.common.base.Preconditions.checkState;
 
 public final class Matrix4 implements Matrix<Matrix4>
 {
+	public static Matrix4 IDENTITY = new Matrix4(
+		1, 0, 0, 0,
+	    0, 1, 0, 0,
+	    0, 0, 1, 0,
+	    0, 0, 0, 1
+	);
+
 	public final float m00, m01, m02, m03,
 	                   m10, m11, m12, m13,
 	                   m20, m21, m22, m23,
