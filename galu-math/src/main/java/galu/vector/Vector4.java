@@ -8,6 +8,8 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 public final class Vector4 implements Vector<Vector4>
 {
+	// TODO: add Quaternion methods to Vector4 (or maybe a new Quaternion class)
+
 	public final float x;
 	public final float y;
 	public final float z;

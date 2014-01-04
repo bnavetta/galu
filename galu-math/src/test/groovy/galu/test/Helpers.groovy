@@ -2,6 +2,7 @@ package galu.test
 
 import galu.matrix.Matrix2
 import galu.matrix.Matrix3
+import galu.matrix.Matrix4
 import galu.vector.Vector2
 import galu.vector.Vector3
 import galu.vector.Vector4
@@ -31,11 +32,16 @@ final class Helpers
 
 	public static Matcher<Matrix2> closeTo(Matrix2 expected, float delta = 0.01)
 	{
-		return new Matrix2Close(expected, delta);
+		return new Matrix2Close(expected, delta)
 	}
 
 	public static Matcher<Matrix3> closeTo(Matrix3 expected, float delta = 0.01)
 	{
-		return new Matrix3Close(expected, delta);
+		return new Matrix3Close(expected, delta)
+	}
+
+	public static Matcher<Matrix4> closeTo(Matrix4 expected, float delta = 0.01)
+	{
+		return new Matrix4Close(expected, delta)
 	}
 }
