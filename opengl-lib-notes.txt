@@ -37,3 +37,4 @@ Use this modern OpenGL tutorial: http://open.gl/
 Usually, everyone's model is a bit different (textures, colors, etc.)
 Have a tool that generates implementation code and a shader from an interface (put as much code as possible in a parent class so it can be edited)
 
+Note on matrices/vectors: possible interop w/ vectorz, since it supports some additional operations (maybe), but not 4x4 matrices

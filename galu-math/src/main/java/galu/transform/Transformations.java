@@ -236,19 +236,22 @@ public final class Transformations
 		float rcos = (float) Math.cos(angle);
 		float rsin = (float) Math.sin(angle);
 
-		float u = axis.x;
-		float v = axis.y;
-		float w = axis.z;
+		Vector3 normalized = axis.normalize(); // GLM normalizes the axis (maybe so there isn't scaling?)
+		float u = normalized.x;
+		float v = normalized.y;
+		float w = normalized.z;
 
-		float m00 = rcos + u*u*(1f-rcos);
-		float m10 = w * rsin + v*u*(1f-rcos);
-		float m20 = -v * rsin + w*u*(1f-rcos);
-		float m01 = -w * rsin + u*v*(1f-rcos);
-		float m11 = rcos + v*v*(1-rcos);
-		float m21 = u * rsin + w*v*(1-rcos);
-		float m02 = v * rsin + u*w*(1-rcos);
-		float m12 = -u * rsin + v*w*(1-rcos);
-		float m22 = rcos + w*w*(1-rcos);
+		float m00 =      rcos + u * u * (1f-rcos);
+		float m10 =  w * rsin + v * u * (1f-rcos);
+		float m20 = -v * rsin + w * u * (1f-rcos);
+
+		float m01 = -w * rsin + u * v * (1f-rcos);
+		float m11 =      rcos + v * v * (1f-rcos);
+		float m21 =  u * rsin + w * v * (1f-rcos);
+
+		float m02 =  v * rsin + u * w * (1f-rcos);
+		float m12 = -u * rsin + v * w * (1f-rcos);
+		float m22 =      rcos + w * w * (1f-rcos);
 
 		return new Matrix4(
 				m00, m01, m02, 0,
@@ -309,5 +312,42 @@ public final class Transformations
 			result = result.multiply(matrices[i]);
 		}
 		return result;
+	}
+
+	/**
+	 * Convert a 3x3 transformation matrix to a 4x4 transformation matrix that can be used with homogeneous coordinates.
+	 * The conversion is as follows:
+	 * <pre>
+	 *     | m00 m01 m02 0 |
+	 *     | m10 m11 m12 0 |
+	 *     | m20 m21 m22 0 |
+	 *     |   0   0   0 1 |
+	 * </pre>
+	 * @param mat a 3x3 transformation matrix
+	 * @return the corresponding 4x4 transformation matrix
+	 */
+	public static Matrix4 toHomogeneous(Matrix3 mat)
+	{
+		return new Matrix4(
+			mat.m00, mat.m01, mat.m02, 0,
+		    mat.m10, mat.m11, mat.m12, 0,
+		    mat.m20, mat.m21, mat.m22, 0,
+		          0,       0,       0, 1
+		);
+	}
+
+	/**
+	 * Convert a 4x4 matrix for transforming homogeneous coordinates to the corresponding 3x3 matrix.
+	 * The last row and last column are removed.
+	 * @param mat a 4x4 transformation matrix
+	 * @return the corresponding 3x3 transformation matrix
+	 */
+	public static Matrix3 fromHomogeneous(Matrix4 mat)
+	{
+		return new Matrix3(
+			mat.m00, mat.m01, mat.m02,
+		    mat.m10, mat.m11, mat.m12,
+		    mat.m20, mat.m21, mat.m22
+		);
 	}
 }

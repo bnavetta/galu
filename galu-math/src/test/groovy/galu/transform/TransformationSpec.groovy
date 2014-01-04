@@ -110,4 +110,100 @@ class TransformationSpec extends Specification
 		that Transformations.scale(factors), closeTo(expected)
 		that Transformations.scale(factors).transform(inVector), closeTo(outVector)
 	}
+
+	def "3-D rotation about x-axis"()
+	{
+		given:
+		def angle = Math.toRadians(120) as float
+
+		def RAD3_2 = Math.sqrt(3) / 2f as float
+		def expected = new Matrix4(
+			1,      0,       0, 0,
+			0,   -0.5, -RAD3_2, 0,
+			0, RAD3_2,    -0.5, 0,
+			0,      0,       0, 1
+		);
+
+		expect:
+		that Transformations.rotateX(angle), closeTo(expected)
+	}
+
+	def "3-D rotation about y-axis"()
+	{
+		given:
+		def angle = Math.toRadians(66) as float
+		def expected = new Matrix4(
+				 0.407, 0, 0.914, 0,
+				     0, 1,     0, 0,
+				-0.914, 0, 0.407, 0,
+				     0, 0,     0, 1)
+
+		expect:
+		that Transformations.rotateY(angle), closeTo(expected)
+	}
+
+	def "3-D rotation about z-axis"()
+	{
+		given:
+		def angle = 3 * Math.PI / 4 as float
+		def INV_SQRT2 = 1 / Math.sqrt(2) as float
+		def expected = new Matrix4(
+			-INV_SQRT2, -INV_SQRT2, 0, 0,
+			 INV_SQRT2, -INV_SQRT2, 0, 0,
+			         0,          0, 1, 0,
+			         0,          0, 0, 1
+		)
+
+		expect:
+		that Transformations.rotateZ(angle), closeTo(expected)
+	}
+
+	def "3-D rotation about arbitrary axis"()
+	{
+		given:
+		def angle = Math.toRadians(42) as float
+		def axis = new Vector3(1, 2, 3)
+
+		// note to self: glm prints matrices in column-major format
+		def expected = new Matrix4(
+			 0.761492, -0.499804,  0.412706, 0,
+			 0.573192,  0.816532, -0.068752, 0,
+			-0.302625,  0.288913,  0.908266, 0,
+			        0,         0,         0, 1
+		)
+
+		expect:
+		that Transformations.rotate(angle, axis), closeTo(expected)
+	}
+
+	def "3-D rotation around all 3 axes"()
+	{
+		given:
+		def angles = new Vector3(42, 37, 99)
+		def expected = Transformations.rotateX(angles.x)
+				.multiply(Transformations.rotateY(angles.y))
+				.multiply(Transformations.rotateZ(angles.z))
+
+		expect:
+		that Transformations.rotate(angles), closeTo(expected)
+	}
+
+	def "3-D translation"()
+	{
+		given:
+		def offset = new Vector3(2, 4, 8)
+		def expected = new Matrix4(
+			1, 0, 0, 2,
+			0, 1, 0, 4,
+			0, 0, 1, 8,
+			0, 0, 0, 1
+		)
+
+		def inVec = new Vector4(1, 2, 3, 1)
+		def outVec = new Vector4(3, 6, 11, 1)
+
+		expect:
+		that Transformations.translate(offset), closeTo(expected)
+		that Transformations.translate(offset).transform(inVec), closeTo(outVec)
+	}
 }
