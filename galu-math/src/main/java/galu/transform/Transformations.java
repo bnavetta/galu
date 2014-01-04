@@ -291,7 +291,7 @@ public final class Transformations
 		return new Matrix4(
 				1, yx, zx, 0,
 				xy,  1, zy, 0,
-				xy, yz,  1, 0,
+				xz, yz,  1, 0,
 				0,  0,  0, 1
 		);
 	}

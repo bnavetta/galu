@@ -206,4 +206,52 @@ class TransformationSpec extends Specification
 		that Transformations.translate(offset), closeTo(expected)
 		that Transformations.translate(offset).transform(inVec), closeTo(outVec)
 	}
+
+	def "3-D shear along x-axis"()
+	{
+		given:
+		    def yShear = 2
+			def zShear = 3
+			def expected = new Matrix4(
+				1, 2, 3, 0,
+				0, 1, 0, 0,
+				0, 0, 1, 0,
+				0, 0, 0, 1
+			)
+
+		expect:
+		that Transformations.shear(0, 0, yShear, 0, zShear, 0), closeTo(expected)
+	}
+
+	def "3-D shear along y-axis"()
+	{
+		given:
+		def xShear = 4
+		def zShear = 7
+		def expected = new Matrix4(
+			1, 0, 0, 0,
+			4, 1, 7, 0,
+			0, 0, 1, 0,
+			0, 0, 0, 1
+		)
+
+		expect:
+		that Transformations.shear(xShear, 0, 0, 0, 0, zShear), closeTo(expected)
+	}
+
+	def "3-D shear along z-axis"()
+	{
+		given:
+		def xShear = 2
+		def yShear = 4
+		def expected = new Matrix4(
+			1, 0, 0, 0,
+			0, 1, 0, 0,
+			2, 4, 1, 0,
+			0, 0, 0, 1
+		)
+
+		expect:
+		that Transformations.shear(0, xShear, 0, yShear, 0, 0), closeTo(expected)
+	}
 }
