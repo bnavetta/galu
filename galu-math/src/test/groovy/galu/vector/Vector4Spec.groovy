@@ -8,29 +8,30 @@ import static spock.util.matcher.HamcrestSupport.that
 import static spock.util.matcher.HamcrestMatchers.closeTo
 import static galu.test.Helpers.*
 
-class Vector3Spec extends Specification
+public class Vector4Spec extends Specification
 {
 	def "size of vector"()
 	{
 		expect:
-		new Vector3(0, 0, 0).size() == 3
+		new Vector4(1, 2, 3, 4).size() == 4
 	}
 
 	def "element access by index"()
 	{
 		given:
-		def vector = new Vector3(1, 2, 3)
+		def vector = new Vector4(1, 2, 3, 4)
 
 		expect:
 		vector.get(0) == 1
 		vector.get(1) == 2
 		vector.get(2) == 3
+		vector.get(3) == 4
 	}
 
 	def "access invalid index"()
 	{
 		when:
-		new Vector3(1, 2, 3).get(-1)
+		new Vector4(1, 2, 3, 4).get(1000)
 
 		then:
 		thrown(IndexOutOfBoundsException)
@@ -39,8 +40,8 @@ class Vector3Spec extends Specification
 	def "equals and hashCode"()
 	{
 		given:
-		def vector = new Vector3(1, 2, 3)
-		def same = new Vector3(1, 2, 3)
+		def vector = new Vector4(1, 2, 3, 4)
+		def same = new Vector4(1, 2, 3, 4)
 
 		expect:
 		vector.equals(vector) == true
@@ -48,20 +49,21 @@ class Vector3Spec extends Specification
 		vector.equals(null) == false
 		vector.equals("I'm a vector") == false
 
-		vector.equals(new Vector3(0, 1, 2)) == false
-		vector.equals(new Vector3(1, 5, 6)) == false
-		vector.equals(new Vector3(1, 2, 6)) == false
+		vector.equals(new Vector4(0, 7, 8, 9)) == false
+		vector.equals(new Vector4(1, 7, 8, 9)) == false
+		vector.equals(new Vector4(1, 2, 8, 9)) == false
+		vector.equals(new Vector4(1, 2, 3, 9)) == false
 
 		vector.hashCode() == vector.hashCode()
 		vector.hashCode() == same.hashCode()
-		vector.hashCode() != new Vector3(7, 8, 9).hashCode()
+		vector.hashCode() != new Vector4(6, 7, 8, 9).hashCode()
 	}
 
 	def "length of vector"()
 	{
 		given:
-		def vector = new Vector3(1, 2, 3)
-		def length = Math.sqrt(14)
+		def vector = new Vector4(1, 2, 3, 4)
+		def length = Math.sqrt(30)
 
 		expect:
 		that vector.length(), closeTo(length, 0.01)
@@ -70,8 +72,8 @@ class Vector3Spec extends Specification
 	def "square of length of vector"()
 	{
 		given:
-		def vector = new Vector3(1, 2, 3)
-		def lengthSquared = 14
+		def vector = new Vector4(1, 2, 3, 4)
+		def lengthSquared = 30
 
 		expect:
 		that vector.lengthSquared(), closeTo(lengthSquared, 0.01)
@@ -80,9 +82,9 @@ class Vector3Spec extends Specification
 	def "angle between two vectors"()
 	{
 		given:
-		def a = new Vector3(1, 2, 3)
-		def b = new Vector3(7, 15, 4)
-		def angle = Math.acos(7.0 * Math.sqrt(7.0/145.0) * 0.5) // what Wolfram|Alpha said
+		def a = new Vector4(1, 2, 3, 4)
+		def b = new Vector4(5, 6, 7, 8)
+		def angle = Math.acos(7 * Math.sqrt(5.0/29) / 3.0)
 
 		expect:
 		that a.angleBetween(b), closeTo(angle, 0.01)
@@ -91,30 +93,30 @@ class Vector3Spec extends Specification
 	def "normalized vector"()
 	{
 		given:
-		def vector = new Vector3(1, 2, 3)
-		def normalized = new Vector3(1.0 / Math.sqrt(14) as float, Math.sqrt(2.0/7.0) as float, 3.0 / Math.sqrt(14.0) as float)
+		def vector = new Vector4(1, 2, 3, 4)
+		def normalized = new Vector4(1.0/Math.sqrt(30) as float, Math.sqrt(2.0/15) as float, Math.sqrt(3.0/10) as float, 2*Math.sqrt(2.0/15) as float)
 
 		expect:
 		that vector.normalize(), closeTo(normalized)
 	}
 
-	def "vector add"()
+	def "vector addition"()
 	{
 		given:
-		def a = new Vector3(1, 2, 3)
-		def b = new Vector3(5, 6, 7)
-		def sum = new Vector3(6, 8, 10)
+		def a = new Vector4(1, 2, 3, 4)
+		def b = new Vector4(5, 6, 7, 8)
+		def sum = new Vector4(6, 8, 10, 12)
 
 		expect:
 		that a.add(b), closeTo(sum)
 	}
 
-	def "vector subtract"()
+	def "vector subtraction"()
 	{
 		given:
-		def a = new Vector3(1, 2, 3)
-		def b = new Vector3(5, 6, 7)
-		def difference = new Vector3(-4, -4, -4)
+		def a = new Vector4(1, 2, 3, 4)
+		def b = new Vector4(5, 6, 7, 8)
+		def difference = new Vector4(-4, -4, -4, -4)
 
 		expect:
 		that a.subtract(b), closeTo(difference)
@@ -123,9 +125,9 @@ class Vector3Spec extends Specification
 	def "vector dot product"()
 	{
 		given:
-		def a = new Vector3(1, 2, 3)
-		def b = new Vector3(4, 5, 6)
-		def product = 32
+		def a = new Vector4(1, 2, 3, 4)
+		def b = new Vector4(5, 6, 7, 8)
+		def product = 70
 
 		expect:
 		that a.dot(b), closeTo(product, 0.01)
@@ -134,8 +136,8 @@ class Vector3Spec extends Specification
 	def "vector negate"()
 	{
 		given:
-		def vector = new Vector3(1, 2, 3)
-		def negated = new Vector3(-1, -2, -3)
+		def vector = new Vector4(1, 2, 3, 4)
+		def negated = new Vector4(-1, -2, -3, -4)
 
 		expect:
 		that vector.negate(), closeTo(negated)
@@ -144,9 +146,9 @@ class Vector3Spec extends Specification
 	def "vector-scalar multiplication"()
 	{
 		given:
-		def vector = new Vector3(1, 2, 3)
-		def scalar = 3
-		def product = new Vector3(3, 6, 9)
+		def vector = new Vector4(1, 2, 3, 4)
+		def scalar = 4
+		def product = new Vector4(4, 8, 12, 16)
 
 		expect:
 		that vector.multiply(scalar), closeTo(product)
@@ -155,9 +157,9 @@ class Vector3Spec extends Specification
 	def "element-wise vector multiplication"()
 	{
 		given:
-		def a = new Vector3(1, 2, 3)
-		def b = new Vector3(4, 5, 6)
-		def product = new Vector3(4, 10, 18)
+		def a = new Vector4(1, 2, 3, 4)
+		def b = new Vector4(5, 6, 7, 8)
+		def product = new Vector4(5, 12, 21, 32)
 
 		expect:
 		that a.multiply(b), closeTo(product)
@@ -166,9 +168,9 @@ class Vector3Spec extends Specification
 	def "vector storage"()
 	{
 		given:
-		def vector = new Vector3(1, 2, 3)
-		def array = new float[3]
-		def buffer = FloatBuffer.allocate(3)
+		def vector = new Vector4(1, 2, 3, 4)
+		def array = new float[4]
+		def buffer = FloatBuffer.allocate(4)
 
 		when:
 		vector.store(array)
@@ -176,14 +178,14 @@ class Vector3Spec extends Specification
 		buffer.flip()
 
 		then:
-		Arrays.equals(array, [1, 2, 3] as float[])
-		buffer == FloatBuffer.wrap([1, 2, 3] as float[])
+		Arrays.equals(array, [1, 2, 3, 4] as float[])
+		buffer == FloatBuffer.wrap([1, 2, 3, 4] as float[])
 	}
 
 	def "store into too-small array"()
 	{
 		when:
-		new Vector3(1, 2, 3).store(new float[2])
+		new Vector4(1, 2, 3, 4).store(new float[2])
 
 		then:
 		thrown(IllegalArgumentException)
@@ -192,7 +194,7 @@ class Vector3Spec extends Specification
 	def "store into too-small buffer"()
 	{
 		when:
-		new Vector3(1, 2, 3).store(FloatBuffer.allocate(2))
+		new Vector4(1, 2, 3, 4).store(FloatBuffer.allocate(2))
 
 		then:
 		thrown(IllegalArgumentException)
@@ -201,25 +203,25 @@ class Vector3Spec extends Specification
 	def "vector to array"()
 	{
 		expect:
-		Arrays.equals(new Vector3(1, 2, 3).toArray(), [1, 2, 3] as float[])
+		Arrays.equals(new Vector4(1, 2, 3, 4).toArray(), [1, 2, 3, 4] as float[])
 	}
 
 	def "load vector"()
 	{
 		given:
-		def array = [1, 2, 3] as float[]
-		def buffer = FloatBuffer.wrap(array)
-		def expected = new Vector3(1, 2, 3)
+		def array = [1, 2, 3, 4] as float[]
+		def buffer =  FloatBuffer.wrap(array)
+		def expected = new Vector4(1, 2, 3, 4)
 
 		expect:
-		that Vector3.load(array), closeTo(expected)
-		that Vector3.load(buffer), closeTo(expected)
+		that Vector4.load(array), closeTo(expected)
+		that Vector4.load(buffer), closeTo(expected)
 	}
 
 	def "load from too-small array"()
 	{
 		when:
-		Vector3.load(new float[2])
+		Vector4.load(new float[2])
 
 		then:
 		thrown(IllegalArgumentException)
@@ -228,7 +230,7 @@ class Vector3Spec extends Specification
 	def "load from too-small buffer"()
 	{
 		when:
-		Vector3.load(FloatBuffer.allocate(2))
+		Vector4.load(FloatBuffer.allocate(2))
 
 		then:
 		thrown(IllegalArgumentException)
@@ -237,6 +239,6 @@ class Vector3Spec extends Specification
 	def "toString is properly formatted"()
 	{
 		expect:
-		new Vector3(1, 2, 3).toString() == "(1.0000, 2.0000, 3.0000)"
+		new Vector4(1, 2, 3, 4).toString() == "(1.0000, 2.0000, 3.0000, 4.0000)"
 	}
 }

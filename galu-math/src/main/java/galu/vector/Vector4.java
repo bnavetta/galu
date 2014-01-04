@@ -4,6 +4,8 @@ import java.nio.FloatBuffer;
 
 import com.google.common.hash.Hashing;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 public final class Vector4 implements Vector<Vector4>
 {
 	public final float x;
@@ -94,11 +96,13 @@ public final class Vector4 implements Vector<Vector4>
 
 	public void store(FloatBuffer buf)
 	{
+		checkArgument(buf.remaining() >= 4, "Buffer has fewer than 4 elements remaining (%s)", buf);
 		buf.put(x).put(y).put(z).put(w);
 	}
 
 	public void store(float[] array)
 	{
+		checkArgument(array.length >= 4, "Array has fewer than 4 elements (%d)", array.length);
 		array[0] = x;
 		array[1] = y;
 		array[2] = z;
@@ -112,11 +116,13 @@ public final class Vector4 implements Vector<Vector4>
 	
 	public static Vector4 load(FloatBuffer buffer)
 	{
+		checkArgument(buffer.remaining() >= 4, "Buffer has fewer than 4 elements remaining (%s)", buffer);
 		return new Vector4(buffer.get(), buffer.get(), buffer.get(), buffer.get());
 	}
 	
 	public static Vector4 load(float[] array)
 	{
+		checkArgument(array.length >= 4, "Array has fewer than 4 elements (%d)", array.length);
 		return new Vector4(array[0], array[1], array[2], array[3]);
 	}
 	
