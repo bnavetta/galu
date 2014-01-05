@@ -254,4 +254,53 @@ class TransformationSpec extends Specification
 		expect:
 		that Transformations.shear(0, xShear, 0, yShear, 0, 0), closeTo(expected)
 	}
+
+	def "combine 3-D transformations"()
+	{
+		given:
+		def first = Transformations.rotateX(Math.PI as float)
+		def second = Transformations.scale(new Vector3(2, 2, 2))
+		def expected = second.multiply(first)
+
+		expect:
+		that Transformations.combine(first, second), closeTo(expected)
+	}
+
+	def "convert to homogeneous"()
+	{
+		given:
+		def matrix = new Matrix3(
+			1, 2, 3,
+			4, 5, 6,
+			7, 8, 9
+		)
+		def expected = new Matrix4(
+			1, 2, 3, 0,
+			4, 5, 6, 0,
+			7, 8, 9, 0,
+			0, 0, 0, 1
+		)
+
+		expect:
+		that Transformations.toHomogeneous(matrix), closeTo(expected)
+	}
+
+	def "convert from homogeneous"()
+	{
+		given:
+		def matrix = new Matrix4(
+			1, 2, 3, 0,
+			4, 5, 6, 0,
+			7, 8, 9, 0,
+			0, 0, 0, 1
+		)
+		def expected = new Matrix3(
+			1, 2, 3,
+			4, 5, 6,
+			7, 8, 9
+		)
+
+		expect:
+		that Transformations.fromHomogeneous(matrix), closeTo(expected)
+	}
 }

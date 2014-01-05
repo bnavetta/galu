@@ -1,0 +1,20 @@
+dependencies {
+	compile "com.google.caliper:caliper:$versions.caliper"
+	compile "com.sun.jersey:jersey-core:1.11" // caliper uses jersey-client, but that doesn't seem to pull in jersey-core
+
+	compile "com.google.guava:guava:$versions.guava"
+
+	compile project(':galu-math')
+}
+
+task benchmarks(type: JavaExec) {
+	main = 'galu.bench.BenchmarkRunner'
+	classpath = sourceSets.main.runtimeClasspath
+	def benchRoot = new File(project.buildDir, "benchmarks")
+	mkdir(benchRoot)
+	args benchRoot, "-Cresults.upload.options.key="
+	if(hasProperty('caliperKey'))
+	{
+		args "-Cresults.upload.options.key=${caliperKey}"
+	}
+}

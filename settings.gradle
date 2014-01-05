@@ -1,4 +1,4 @@
-include 'galu-math'
+include 'galu-math', 'galu-bench'
 
 rootProject.name = 'galu'
 
